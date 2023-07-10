@@ -6,7 +6,6 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -66,17 +65,14 @@ class DiskSpaceManagerTest {
         for (int i = 0; i < data.length; ++i) {
             data[i] = (byte) (Integer.valueOf(i).hashCode() & 0xFF);
         }
-        ByteBuffer byteBuffer = ByteBuffer.wrap(data);
-        Page page = new Page(byteBuffer);
 
         DiskSpaceManager DSM = new DiskSpaceManager(dbFolder.getAbsolutePath());
 
         // when
-        DSM.writePage(0, page);
-        Page readPage = DSM.readPage(0);
+        DSM.writePage(0, data);
+        byte[] readData = DSM.readPage(0);
 
         // then
-        byte[] readData = readPage.getByteBuffer().array();
         assertThat(readData).isEqualTo(data);
 
         DSM.close();

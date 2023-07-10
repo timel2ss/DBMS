@@ -44,7 +44,6 @@ public class DiskSpaceManager implements AutoCloseable {
                 throw new RuntimeException(e);
             }
         }
-
     }
 
     @Override
@@ -54,7 +53,7 @@ public class DiskSpaceManager implements AutoCloseable {
         }
     }
 
-    Page readPage(long pageId) {
+    public byte[] readPage(long pageId) {
         int fileOffset = getFileOffset(pageId);
         RandomAccessFile file = openedFiles.get(fileOffset);
         try {
@@ -62,18 +61,18 @@ public class DiskSpaceManager implements AutoCloseable {
             byte[] buf = new byte[PAGE_SIZE];
             ByteBuffer byteBuffer = ByteBuffer.wrap(buf);
             file.getChannel().read(byteBuffer);
-            return new Page(byteBuffer);
+            return buf;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    void writePage(long pageId, Page data) {
+    public void writePage(long pageId, byte[] data) {
         int fileOffset = getFileOffset(pageId);
         RandomAccessFile file = openedFiles.get(fileOffset);
         try {
             file.seek(fileOffset * PAGE_SIZE);
-            ByteBuffer byteBuffer = data.getByteBuffer();
+            ByteBuffer byteBuffer = ByteBuffer.wrap(data);
             file.getChannel().write(byteBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
