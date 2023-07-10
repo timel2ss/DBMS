@@ -14,8 +14,8 @@ import java.util.Map;
 @Slf4j
 @Getter
 public class DiskSpaceManager implements AutoCloseable {
-    public static final short PAGE_SIZE = 4096;
-    public static final byte PAGES_PER_FILE = 100;
+    public static final short PAGE_SIZE = 4096; // 4,096 bytes
+    public static final int PAGES_PER_FILE = 1000;
 
     private Map<Integer, RandomAccessFile> openedFiles = new HashMap<>();
 
@@ -54,10 +54,11 @@ public class DiskSpaceManager implements AutoCloseable {
     }
 
     public byte[] readPage(long pageId) {
-        int fileOffset = getFileOffset(pageId);
-        RandomAccessFile file = openedFiles.get(fileOffset);
+        int fileId = getFileId(pageId);
+        int pageOffset = getPageOffset(pageId);
+        RandomAccessFile file = openedFiles.get(fileId);
         try {
-            file.seek(fileOffset * PAGE_SIZE);
+            file.seek(pageOffset * PAGE_SIZE);
             byte[] buf = new byte[PAGE_SIZE];
             ByteBuffer byteBuffer = ByteBuffer.wrap(buf);
             file.getChannel().read(byteBuffer);
@@ -68,10 +69,11 @@ public class DiskSpaceManager implements AutoCloseable {
     }
 
     public void writePage(long pageId, byte[] data) {
-        int fileOffset = getFileOffset(pageId);
-        RandomAccessFile file = openedFiles.get(fileOffset);
+        int fileId = getFileId(pageId);
+        int pageOffset = getPageOffset(pageId);
+        RandomAccessFile file = openedFiles.get(fileId);
         try {
-            file.seek(fileOffset * PAGE_SIZE);
+            file.seek(pageOffset * PAGE_SIZE);
             ByteBuffer byteBuffer = ByteBuffer.wrap(data);
             file.getChannel().write(byteBuffer);
         } catch (IOException e) {
@@ -80,8 +82,12 @@ public class DiskSpaceManager implements AutoCloseable {
 
     }
 
-    private int getFileOffset(long pageId) {
-        return (int) pageId % PAGES_PER_FILE;
+    private int getFileId(long pageId) {
+        return (int) (pageId / PAGES_PER_FILE);
+    }
+
+    private int getPageOffset(long pageId) {
+        return (int) (pageId % PAGES_PER_FILE);
     }
 
     private int parseFileId(File file) {
