@@ -1,9 +1,8 @@
-package dbms.index.page.layout.internal;
+package dbms.io.page.layout.internal;
 
-import dbms.index.page.Page;
-import dbms.index.page.layout.HeaderPage;
-import dbms.index.page.layout.PageHeader;
 import dbms.io.DiskSpaceManager;
+import dbms.io.page.layout.HeaderPage;
+import dbms.io.page.layout.PageHeader;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -19,10 +18,10 @@ class InternalPageTest {
     void internalPage() {
         // given
         DiskSpaceManager DSM = new DiskSpaceManager("src/test/resources/sample");
-        HeaderPage headerPage = new HeaderPage(new Page(DSM.readPage(0l)));
+        HeaderPage headerPage = new HeaderPage(DSM.readPage(0l));
 
         // when
-        InternalPage internalPage = new InternalPage(new Page(DSM.readPage(headerPage.getRootPageAddr())));
+        InternalPage internalPage = new InternalPage(DSM.readPage(headerPage.getRootPageAddr()));
 
         // then
         PageHeader pageHeader = internalPage.getPageHeader();

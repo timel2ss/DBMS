@@ -1,9 +1,8 @@
-package dbms.index.page.layout;
+package dbms.io.page.layout;
 
-import dbms.index.page.Page;
-import dbms.index.page.layout.internal.InternalPage;
-import dbms.index.page.layout.leaf.LeafPage;
 import dbms.io.DiskSpaceManager;
+import dbms.io.page.layout.internal.InternalPage;
+import dbms.io.page.layout.leaf.LeafPage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,10 +14,10 @@ class PageHeaderTest {
     void internalPageHeader() {
         // given
         DiskSpaceManager DSM = new DiskSpaceManager("src/test/resources/sample");
-        HeaderPage headerPage = new HeaderPage(new Page(DSM.readPage(0l)));
+        HeaderPage headerPage = new HeaderPage(DSM.readPage(0l));
 
         // when
-        InternalPage internalPage = new InternalPage(new Page(DSM.readPage(headerPage.getRootPageAddr())));
+        InternalPage internalPage = new InternalPage(DSM.readPage(headerPage.getRootPageAddr()));
         PageHeader pageHeader = internalPage.getPageHeader();
 
         // then
@@ -33,12 +32,12 @@ class PageHeaderTest {
     void LeafPageHeader() {
         // given
         DiskSpaceManager DSM = new DiskSpaceManager("src/test/resources/sample");
-        HeaderPage headerPage = new HeaderPage(new Page(DSM.readPage(0l)));
-        InternalPage tempPage1 = new InternalPage(new Page(DSM.readPage(headerPage.getRootPageAddr())));
-        InternalPage tempPage2 = new InternalPage(new Page(DSM.readPage(tempPage1.getPageHeader().getPageAddr())));
+        HeaderPage headerPage = new HeaderPage(DSM.readPage(0l));
+        InternalPage tempPage1 = new InternalPage(DSM.readPage(headerPage.getRootPageAddr()));
+        InternalPage tempPage2 = new InternalPage(DSM.readPage(tempPage1.getPageHeader().getPageAddr()));
 
         // when
-        LeafPage leafPage = new LeafPage(new Page(DSM.readPage(tempPage2.getPageHeader().getPageAddr())));
+        LeafPage leafPage = new LeafPage(DSM.readPage(tempPage2.getPageHeader().getPageAddr()));
         PageHeader pageHeader = leafPage.getPageHeader();
 
         // then

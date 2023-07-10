@@ -1,10 +1,9 @@
-package dbms.index.page.layout.leaf;
+package dbms.io.page.layout.leaf;
 
-import dbms.index.page.Page;
-import dbms.index.page.layout.HeaderPage;
-import dbms.index.page.layout.PageHeader;
-import dbms.index.page.layout.internal.InternalPage;
 import dbms.io.DiskSpaceManager;
+import dbms.io.page.layout.HeaderPage;
+import dbms.io.page.layout.PageHeader;
+import dbms.io.page.layout.internal.InternalPage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -19,12 +18,12 @@ class LeafPageTest {
     void LeafPage() {
         // given
         DiskSpaceManager DSM = new DiskSpaceManager("src/test/resources/sample");
-        HeaderPage headerPage = new HeaderPage(new Page(DSM.readPage(0l)));
-        InternalPage tempPage1 = new InternalPage(new Page(DSM.readPage(headerPage.getRootPageAddr())));
-        InternalPage tempPage2 = new InternalPage(new Page(DSM.readPage(tempPage1.getPageHeader().getPageAddr())));
+        HeaderPage headerPage = new HeaderPage(DSM.readPage(0l));
+        InternalPage tempPage1 = new InternalPage(DSM.readPage(headerPage.getRootPageAddr()));
+        InternalPage tempPage2 = new InternalPage(DSM.readPage(tempPage1.getPageHeader().getPageAddr()));
 
         // when
-        LeafPage leafPage = new LeafPage(new Page(DSM.readPage(tempPage2.getPageHeader().getPageAddr())));
+        LeafPage leafPage = new LeafPage(DSM.readPage(tempPage2.getPageHeader().getPageAddr()));
 
         // then
         PageHeader pageHeader = leafPage.getPageHeader();

@@ -1,5 +1,6 @@
 package dbms.io;
 
+import dbms.io.page.Page;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,7 +54,7 @@ public class DiskSpaceManager implements AutoCloseable {
         }
     }
 
-    public byte[] readPage(long pageId) {
+    public Page readPage(long pageId) {
         int fileId = getFileId(pageId);
         int pageOffset = getPageOffset(pageId);
         RandomAccessFile file = openedFiles.get(fileId);
@@ -62,19 +63,19 @@ public class DiskSpaceManager implements AutoCloseable {
             byte[] buf = new byte[PAGE_SIZE];
             ByteBuffer byteBuffer = ByteBuffer.wrap(buf);
             file.getChannel().read(byteBuffer);
-            return buf;
+            return new Page(buf);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void writePage(long pageId, byte[] data) {
+    public void writePage(long pageId, Page data) {
         int fileId = getFileId(pageId);
         int pageOffset = getPageOffset(pageId);
         RandomAccessFile file = openedFiles.get(fileId);
         try {
             file.seek(pageOffset * PAGE_SIZE);
-            ByteBuffer byteBuffer = ByteBuffer.wrap(data);
+            ByteBuffer byteBuffer = data.getByteBuffer();
             file.getChannel().write(byteBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);

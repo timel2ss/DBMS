@@ -1,5 +1,6 @@
 package dbms.io;
 
+import dbms.io.page.Page;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -69,10 +70,11 @@ class DiskSpaceManagerTest {
         DiskSpaceManager DSM = new DiskSpaceManager(dbFolder.getAbsolutePath());
 
         // when
-        DSM.writePage(0, data);
-        byte[] readData = DSM.readPage(0);
+        DSM.writePage(0, new Page(data));
+        Page readPage = DSM.readPage(0);
 
         // then
+        byte[] readData = readPage.getByteBuffer().array();
         assertThat(readData).isEqualTo(data);
 
         DSM.close();

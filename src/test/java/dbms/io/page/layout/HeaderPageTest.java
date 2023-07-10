@@ -1,7 +1,7 @@
-package dbms.index.page.layout;
+package dbms.io.page.layout;
 
-import dbms.index.page.Page;
 import dbms.io.DiskSpaceManager;
+import dbms.io.page.Page;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +14,7 @@ class HeaderPageTest {
     void headerPage() {
         // given
         DiskSpaceManager DSM = new DiskSpaceManager("src/test/resources/sample");
-        Page page = new Page(DSM.readPage(0l));
+        Page page = DSM.readPage(0l);
 
         // when
         HeaderPage headerPage = new HeaderPage(page);

@@ -1,6 +1,5 @@
-package dbms.index.page.layout;
+package dbms.io.page.layout;
 
-import dbms.index.page.Page;
 import dbms.io.DiskSpaceManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,10 +13,10 @@ class FreePageTest {
     void freePage() {
         // given
         DiskSpaceManager DSM = new DiskSpaceManager("src/test/resources/sample");
-        HeaderPage headerPage = new HeaderPage(new Page(DSM.readPage(0l)));
+        HeaderPage headerPage = new HeaderPage(DSM.readPage(0l));
 
         // when
-        FreePage freePage = new FreePage(new Page(DSM.readPage(headerPage.getFreePageAddr())));
+        FreePage freePage = new FreePage(DSM.readPage(headerPage.getFreePageAddr()));
 
         // then
         assertThat(freePage.getNextFreePageAddr()).isEqualTo(633l);

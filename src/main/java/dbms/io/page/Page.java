@@ -1,4 +1,4 @@
-package dbms.index.page;
+package dbms.io.page;
 
 import lombok.Getter;
 
@@ -10,9 +10,5 @@ public class Page {
 
     public Page(byte[] data) {
         this.byteBuffer = ByteBuffer.wrap(data);
-    }
-
-    public Page(ByteBuffer byteBuffer) {
-        this.byteBuffer = byteBuffer;
     }
 }

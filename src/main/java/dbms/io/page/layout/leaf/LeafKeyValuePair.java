@@ -1,6 +1,6 @@
-package dbms.index.page.layout.leaf;
+package dbms.io.page.layout.leaf;
 
-import dbms.index.page.Page;
+import dbms.io.page.Page;
 import lombok.Getter;
 
 import java.nio.ByteBuffer;

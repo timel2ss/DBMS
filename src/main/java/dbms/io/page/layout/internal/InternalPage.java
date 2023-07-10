@@ -1,15 +1,14 @@
-package dbms.index.page.layout.internal;
+package dbms.io.page.layout.internal;
 
-import dbms.index.page.Page;
-import dbms.index.page.layout.PageHeader;
+import dbms.io.page.Page;
+import dbms.io.page.layout.PageHeader;
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static dbms.index.page.layout.PageHeader.PAGE_HEADER_SIZE;
-import static dbms.index.page.layout.internal.InternalKeyValuePair.INTERNAL_KEY_VALUE_PAIR_SIZE;
 import static dbms.io.DiskSpaceManager.PAGE_SIZE;
+import static dbms.io.page.layout.PageHeader.PAGE_HEADER_SIZE;
 
 @Getter
 public class InternalPage {
@@ -21,7 +20,7 @@ public class InternalPage {
         for (int i = 0; i < pageHeader.getNumberOfKeys(); i++) {
             keyValuePairs.add(new InternalKeyValuePair(page));
         }
-        int remainBytes = PAGE_SIZE - PAGE_HEADER_SIZE - INTERNAL_KEY_VALUE_PAIR_SIZE * pageHeader.getNumberOfKeys();
+        int remainBytes = PAGE_SIZE - PAGE_HEADER_SIZE - InternalKeyValuePair.INTERNAL_KEY_VALUE_PAIR_SIZE * pageHeader.getNumberOfKeys();
         page.getByteBuffer().get(new byte[remainBytes]);
     }
 }
